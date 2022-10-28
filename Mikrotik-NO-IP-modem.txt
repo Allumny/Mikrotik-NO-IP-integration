@@ -1,0 +1,16 @@
+:log info "Verificando DDNS..."
+
+:local NOIPUser "NO-IP user"
+:local NOIPPass "NO-IP password"
+:local NOIPDomain "domain"
+
+:log info "Verificando IPv4 Público..."
+/tool fetch url="http://myip.dnsomatic.com/mypublicip.txt" mode=http
+:local externalIP [/file get mypublicip.txt contents]
+:log info "IP Público: $externalIP"
+
+:log info "Atualizando $NOIPDomain"
+/tool fetch mode=http user=$NOIPUser password=$NOIPPass url="http://$NOIPUser:$NOIPPass@dynupdate.no-ip.com/nic/update?hostname=$NOIPDomain&myip=$externalIP" keep-result=no
+:log info "NO-IP Atualizado: $NOIPDomain - $externalIP"
+
+:log info "DDNS Atualizado."
