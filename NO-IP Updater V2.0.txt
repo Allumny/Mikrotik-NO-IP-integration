@@ -1,0 +1,22 @@
+# ATUALIZADOR DO NO-IP V2.0
+
+:log info "Atualizando o NO-IP. . ."
+
+# Configurações específicas pra cada roteador.
+
+:local NOIPUser "usuário"
+:local NOIPPass "senha"
+:local NOIPDomain "hostname"
+
+:log info "Verificando IPv4 Público. . ."
+/tool fetch url="http://api.ipify.org/" mode=http dst-path=ipExterno.txt
+:local ipExterno [/file get ipExterno.txt contents]
+:log info "IP Público: $ipExterno"
+
+:log info "Atualizando $NOIPDomain"
+/tool fetch mode=http user=$NOIPUser password=$NOIPPass url="dynupdate.no-ip.com/nic/update?hostname=$NOIPDomain&myip=$ipExterno" keep-result=no
+:log info "NO-IP Atualizado: $NOIPDomain - $ipExterno"
+
+:log info "NO-IP Atualizado."
+
+# 2023, Allumny. Copia não comédia.
