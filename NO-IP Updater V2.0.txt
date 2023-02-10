@@ -1,22 +1,26 @@
 # ATUALIZADOR DO NO-IP V2.0
 
-:log info "Atualizando o NO-IP. . ."
+:log info "Updating DDNS. . ."
 
 # Configurações específicas pra cada roteador.
 
-:local NOIPUser "usuário"
-:local NOIPPass "senha"
+:local NOIPUser "user"
+:local NOIPPass "password"
 :local NOIPDomain "hostname"
 
-:log info "Verificando IPv4 Público. . ."
-/tool fetch url="http://api.ipify.org/" mode=http dst-path=ipExterno.txt
-:local ipExterno [/file get ipExterno.txt contents]
-:log info "IP Público: $ipExterno"
+:log info "Verifying public IPv4. . ."
+:log info "First pass (ipify API):"
+:local ipify [/tool fetch output=user url=http://api.ipify.org];
+:log info "Result: $ipify"
+:log info "Second pass (MK Cloud):"
+:local cloud [/ip cloud get public-address];
+:log info "Result: $cloud"
 
-:log info "Atualizando $NOIPDomain"
-/tool fetch mode=http user=$NOIPUser password=$NOIPPass url="dynupdate.no-ip.com/nic/update?hostname=$NOIPDomain&myip=$ipExterno" keep-result=no
-:log info "NO-IP Atualizado: $NOIPDomain - $ipExterno"
 
-:log info "NO-IP Atualizado."
+:log info "Updating $NOIPDomain . . ."
+/tool fetch mode=http user=$NOIPUser password=$NOIPPass url="http://dynupdate.no-ip.com/nic/update?hostname=$NOIPDomain&myip=$cloud" keep-result=yes;
+:log info "Fetched: $NOIPDomain - $cloud"
+
+:log info "Done."
 
 # 2023, Allumny. Copia não comédia.
