@@ -15,10 +15,11 @@
 :log info "Second pass (MK Cloud):"
 :local cloud [/ip cloud get public-address];
 :log info "Result: $cloud"
+:local url "https://dynupdate.no-ip.com/nic/update?hostname=$NOIPDomain&myip=$cloud"
 
 
 :log info "Updating $NOIPDomain . . ."
-/tool fetch mode=http user=$NOIPUser password=$NOIPPass url="http://dynupdate.no-ip.com/nic/update?hostname=$NOIPDomain&myip=$cloud" keep-result=yes;
+/tool fetch mode=https url="$url" user=$NOIPUser password=$NOIPPass;
 :log info "Fetched: $NOIPDomain - $cloud"
 
 :log info "Done."
